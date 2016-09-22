@@ -52,7 +52,8 @@ def get_champion_background_page_ids(champions):
                     if lore_index_start:
                         lore = result[lore_index_start + len(regex_match) + 1:]
 
-                    lore_end_index = lore.find('==')
+                    lore_section_start = max(lore.find('== lore =='), 0)
+                    lore_end_index = lore.find('==', lore_section_start)
                     lore_end_index_alt = lore.find('{{Section')
                     if lore_end_index_alt < lore_end_index or lore_end_index == 0:
                         lore_end_index = lore_end_index_alt
@@ -66,28 +67,11 @@ def get_champion_background_page_ids(champions):
                     champion['background'] = lore
             else:
                 print("Couldn't load champion data from champion API. Status Code: " + str(r.status_code))
-        else:
-            print(champion['name'])
-            print(champion['background'])
-            print('---------------')
-
-def get_champion_background_page_id(champion_name):
-    pass
-
-def get_champion_backgrounds():
-    pass
-
-def print_backgrounds_to_file():
-    pass
 
 def run():
     if 'RIOT_DEV_API_KEY' in os.environ:
         champion_data = get_champion_data()
         get_champion_background_page_ids(champion_data['data'])
-
-        #for champion in champion_data['data']:
-        #    print champion
-        print(champion_data['data']['Leblanc'])
 
         if champion_data != None:
             #create output dir if it doesn't exist
