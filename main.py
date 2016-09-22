@@ -32,7 +32,7 @@ def get_champion_data():
     return champion_data
 
 def get_champion_background_page_ids(champions):
-    force_refresh_background = True
+    force_refresh_background = False
     for champId in champions:
         champion = champions[champId]
         if force_refresh_background or 'background' not in champion or champion['background'] == '':
@@ -53,8 +53,14 @@ def get_champion_background_page_ids(champions):
                     if lore_index_start:
                         lore = result[lore_index_start + len(regex_match) + 1:]
 
-                    lore_section_start = max(lore.find('== Lore =='), 0)
-                    lore_end_index = lore.find('==', lore_section_start + len('== Lore =='))
+                    lore_section_start = lore.find('== Lore ==')
+                    if lore_section_start < 0:
+                        lore_section_start = lore.find('==Lore==')
+
+                    if lore_section_start > 0:
+                        lore_end_index = lore.find('==', lore_section_start + len('== Lore =='))
+                    else:
+                        lore_end_index = lore.find('==')
 
                     lore_end_index_alt = lore.find('{{Section')
                     if lore_end_index_alt < lore_end_index or lore_end_index == 0:
@@ -64,7 +70,6 @@ def get_champion_background_page_ids(champions):
                         lore = lore[0:lore_end_index]
                     else:
                         print "END INDEX NOT FOUND -- " + champion['name']
-                        break
 
                     champion['background'] = lore
             else:
