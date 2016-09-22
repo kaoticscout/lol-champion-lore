@@ -32,7 +32,7 @@ def get_champion_data():
     return champion_data
 
 def get_champion_background_page_ids(champions):
-    force_refresh_background = False
+    force_refresh_background = True
     for champId in champions:
         champion = champions[champId]
         if force_refresh_background or 'background' not in champion or champion['background'] == '':
@@ -44,7 +44,7 @@ def get_champion_background_page_ids(champions):
                 # do some manual lore parsing, yucky
                 lore = ""
                 #{{Champion bio*}}
-                regex = re.search('(?s)({{Champion bio.*?}}\n\n)', result)
+                regex = re.search('(?s)({{Champion bio.*?\n\n)', result)
                 if regex != None:
                     regex_match = (regex.group(0))
                     champion['meta'] = regex.group(0)
