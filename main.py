@@ -32,10 +32,10 @@ def get_champion_data():
     return champion_data
 
 def get_champion_background_page_ids(champions):
-    force_refresh = True
+    force_refresh_background = False
     for champId in champions:
         champion = champions[champId]
-        if force_refresh or 'background' not in champion or champion['background'] == '':
+        if force_refresh_background or 'background' not in champion or champion['background'] == '':
             print("No background for " + champion['name'] + ". Looking it up...")
             r = requests.get(config['ChampionBackgroundAPI'] + champion['name'])
             if r.status_code == 200:
@@ -44,16 +44,18 @@ def get_champion_background_page_ids(champions):
                 # do some manual lore parsing, yucky
                 lore = ""
                 #{{Champion bio*}}
-                regex = re.search('(?s)({{Champion bio.*?}})', result)
+                regex = re.search('(?s)({{Champion bio.*?}}\n\n)', result)
                 if regex != None:
                     regex_match = (regex.group(0))
+                    champion['meta'] = regex.group(0)
 
                     lore_index_start = result.find(regex_match)
                     if lore_index_start:
                         lore = result[lore_index_start + len(regex_match) + 1:]
 
-                    lore_section_start = max(lore.find('== lore =='), 0)
-                    lore_end_index = lore.find('==', lore_section_start)
+                    lore_section_start = max(lore.find('== Lore =='), 0)
+                    lore_end_index = lore.find('==', lore_section_start + len('== Lore =='))
+
                     lore_end_index_alt = lore.find('{{Section')
                     if lore_end_index_alt < lore_end_index or lore_end_index == 0:
                         lore_end_index = lore_end_index_alt
