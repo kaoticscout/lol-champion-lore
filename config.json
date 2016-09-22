@@ -1,0 +1,6 @@
+{
+  "Cache" : "Cache",
+  "Cache_Champions" : "Cache/Champions",
+  "ChampionsAPI" : "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion",
+  "ChampionBackgroundAPI" : "http://leagueoflegends.wikia.com/api.php?action=query&prop=text&section=0&format=json&generator=categorymembers&gcmlimit=max&export&gcmtitle=Category:"
+}
